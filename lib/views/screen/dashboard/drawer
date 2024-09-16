@@ -1,0 +1,343 @@
+drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: bg2Color,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FutureBuilder<void>(
+                    future: productProvider.getUserData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final userModel = productProvider.userModelList.first;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userModel.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                            ),
+                            Text(
+                              userModel.email,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.home,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Home',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.person,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Edit Profile',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/edit');
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.shopping_cart,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Keranjang',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CartScreen(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.shopping_cart,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Make Own Drinks',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MakeScreen(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.payment,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Belum Bayar',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Licek(
+                      isEqualTo: 'Belum Bayar',
+                      namescreen: 'Belum Bayar',
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.motorcycle_outlined,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Menunggu Konfirmasi',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ListCek(
+                      isEqualTo: 'Tunggu',
+                      namescreen: 'Tunggu',
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.check_outlined,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Sudah Bayar',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ListCek(
+                      isEqualTo: 'Sudah Bayar',
+                      namescreen: 'Sudah Bayar',
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.favorite,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Selesai',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ListCek(
+                      isEqualTo: 'Selesai',
+                      namescreen: 'Selesai',
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Row(
+                children: [
+                  const Icon(
+                    Icons.rule,
+                    size: 24.0,
+                    color: Colors.black87,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Ditolak',
+                    style: priceTextStyle.copyWith(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ListCek(
+                      isEqualTo: 'Ditolak',
+                      namescreen: 'Ditolak',
+                    ),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: GestureDetector(
+                onTap: _logout,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.logout,
+                      color: bg2Color,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Add more ListTiles for additional items in the drawer
+          ],
+        ),
+      ),

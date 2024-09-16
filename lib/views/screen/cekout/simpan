@@ -1,0 +1,207 @@
+import 'package:apps/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../providers/product_provider.dart';
+import '../../../util/dimensions.dart';
+
+import '../../../widget/notif_button.dart';
+import 'components/cekout_card.dart';
+
+class CekoutScreen extends StatefulWidget {
+  const CekoutScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<CekoutScreen> createState() => _CekoutScreenState();
+}
+
+class _CekoutScreenState extends State<CekoutScreen> {
+  late ProductProvider productProvider;
+
+  String userAlamat = ''; // Define userAlamat variable
+
+  Widget _buildBottomSingleDetail(
+      {required String startName, required String endName}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          startName,
+          style: primaryTextStyle.copyWith(
+            fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
+            color: Theme.of(context).cardColor,
+          ),
+        ),
+        Text(
+          endName,
+          style: primaryTextStyle.copyWith(
+            fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
+            color: Theme.of(context).cardColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Future<double> getOngkirPrice(String alamat) async {
+  //   final userSnapshot = await FirebaseFirestore.instance
+  //       .collection('user')
+  //       .doc('userid') // Ganti 'uid_pengguna' dengan ID pengguna yang sesuai
+  //       .get();
+
+  //   final userAlamat = userSnapshot.data()?['alamat1'];
+
+  //   final ongkirSnapshot = await FirebaseFirestore.instance
+  //       .collection('ongkir')
+  //       .where('name', isEqualTo: userAlamat)
+  //       .get();
+
+  //   if (ongkirSnapshot.docs.isNotEmpty) {
+  //     final ongkirData = ongkirSnapshot.docs.first.data();
+  //     final ongkirPrice = ongkirData['price'];
+
+  //     return ongkirPrice.toDouble();
+  //   }
+
+  //   return 0.0;
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    double subtotal = 0;
+    productProvider = Provider.of<ProductProvider>(context);
+
+    double totalPrice = 0.0;
+    for (var cardModel in productProvider.getCardModelList) {
+      totalPrice += cardModel.price * cardModel.quenty;
+    }
+
+    return Scaffold(
+      backgroundColor: bg1Color,
+      appBar: AppBar(
+        backgroundColor: bg1Color,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text("Checkout"),
+        actions: [
+          NotifButton(),
+          SizedBox(
+            width: 10,
+          )
+        ],
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.popAndPushNamed(context, '/cart');
+          },
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 24.0,
+          ),
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: SizedBox(
+              width: double.infinity,
+              child: ListView.builder(
+                itemCount: productProvider.getCardModelListLength,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CekoutCard(
+                          imageUrl:
+                              productProvider.getCardModelList[index].image,
+                          title: productProvider.getCardModelList[index].name,
+                          price: productProvider.getCardModelList[index].price,
+                          count: productProvider.getCardModelList[index].quenty,
+                          totalPrice: totalPrice,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                    color: bg2Color, borderRadius: BorderRadius.circular(20)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _buildBottomSingleDetail(
+                      startName: "Jumlah Barang",
+                      endName:
+                          productProvider.getCardModelListLength.toString(),
+                    ),
+                    _buildBottomSingleDetail(
+                      startName: "Total Barang",
+                      endName: "${subtotal.toInt()}",
+                    ),
+                    // FutureBuilder<double>(
+                    //   future: getOngkirPrice(
+                    //       userAlamat), // Mendapatkan harga ongkir dari fungsi getOngkirPrice
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.hasData) {
+                    //       return _buildBottomSingleDetail(
+                    //         startName: "Ongkir",
+                    //         endName: "Rp ${snapshot.data?.toInt()}",
+                    //       );
+                    //     } else {
+                    //       return _buildBottomSingleDetail(
+                    //         startName: "Ongkir",
+                    //         endName: "Rp 0",
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+                    _buildBottomSingleDetail(
+                      startName: "Total",
+                      endName: "Rp ${totalPrice.toInt()}",
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: bg2Color,
+          ),
+          height: 50,
+          width: double.infinity,
+          child: TextButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, '/home');
+            },
+            icon: const Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.white,
+            ),
+            label: const Text(
+              "Beli",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
